@@ -4,6 +4,31 @@ from imports import *
 if not os.path.exists('models'):
     os.mkdir('models')
 
+def create_model(input_size, lr=0.001):
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Conv2D(32, 4, 1, input_shape=input_size))
+    model.add(tf.keras.layers.Activation("relu"))
+
+    model.add(tf.keras.layers.Conv2D(64, 4, 1))
+    model.add(tf.keras.layers.Activation("relu"))
+
+    model.add(tf.keras.layers.Conv2D(128, 4, 1))
+    model.add(tf.keras.layers.Activation("relu"))
+
+    model.add(tf.keras.layers.Flatten())
+
+    model.add(tf.keras.layers.Dense(100, kernel_regularizer=tf.keras.regularizers.l2(0.01), ))
+    model.add(tf.keras.layers.Activation("relu"))
+    model.add(tf.keras.layers.BatchNormalization())
+
+    model.add(tf.keras.layers.Dense(50, kernel_regularizer=tf.keras.regularizers.l2(0.01), ))
+    model.add(tf.keras.layers.Activation("relu"))
+    model.add(tf.keras.layers.BatchNormalization())
+
+    model.add(tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.01), ))
+    model.add(tf.keras.layers.Activation("relu"))
+
+
 
 class GNN(nn.Module):
     def __init__(self, num_features, hidden_dim, output_dim):

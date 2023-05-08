@@ -3,9 +3,9 @@ from model import Classifier
 from dataloader import get_training_dataloader
 
 
-LR = 1e-3
-BATCH_SIZE = 10
-EPOCHS = 50
+LR = 0.001
+BATCH_SIZE = 64
+EPOCHS = 300
 #EPOCHS = 4
 
 def get_bce_loss(predictions, y):
@@ -45,6 +45,8 @@ def save_trained(decoy_style, direction, seed):
         classifier.load_state_dict(torch.load(fname, map_location="cpu"))
 
     optimizer = torch.optim.Adam(classifier.parameters(), lr=LR)
+    sgd = tf.keras.optimizers.SGD(lr=lr, momentum=0.9, decay=1e-6,
+clipvalue=0.01)
 
     start_from = curr_epoch + 1 if curr_epoch else 0
 
