@@ -8,6 +8,8 @@ class ComplexDataset(Dataset):
         self.features = features
         self.labels = labels
 
+        print(len(labels))
+
     def len(self):
         return len(self.labels)
 
@@ -17,7 +19,11 @@ class ComplexDataset(Dataset):
     #def get(self, idx):
     def __getitem__(self, idx):
 
-        return self.features[idx], np.float(self.labels[idx] == "A")
+       # print(self.features[idx][0].shape)
+        features = torch.from_numpy(self.features[idx]).float()
+
+
+        return features, np.float(self.labels[idx] == "A")
 
 
 def get_training_dataloader(decoy_style, direction, seed, batch_size):

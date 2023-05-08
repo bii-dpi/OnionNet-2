@@ -32,8 +32,10 @@ def write_eval(decoy_style, direction, args):
                       "recall_10", "recall_25", "recall_50", "EF_1",
                       "EF_5", "EF_10", "EF_25", "EF_50"])]
 
+    '''
     if os.path.isfile(f"results/{decoy_style}_{direction}.csv"):
         return
+    '''
 
     for pdb_id in progressbar(pdb_ids_dict[direction]):
         try:
@@ -44,9 +46,13 @@ def write_eval(decoy_style, direction, args):
             curr_testing_dl = \
                 get_testing_dataloader(decoy_style, direction, pdb_id, BATCH_SIZE)
             for seed in range(NUM_SEEDS):
-                for epoch in (10, 25, 50, 75, 99):
-#                for epoch in (49,):
+#                for epoch in (10, 25, 50, 75, 99):
+                for epoch in (49,):
     #            for epoch in (1, 2,):
+                    from torchvision.models import resnet50 as resnet
+                    from torchvision.models.squeezenet import SqueezeNet as resnet
+
+                    curr_classifier = resnet(num_classes=1).to(device)
                     curr_classifier = Classifier().to(device)
                     curr_path = f"models/{decoy_style}/{direction}/{seed}_{epoch}.pt"
                     curr_classifier.load_state_dict(torch.load(curr_path, map_location="cpu"))

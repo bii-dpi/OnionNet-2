@@ -1,3 +1,4 @@
+import torchvision
 from imports import *
 from model import Classifier
 from dataloader import get_training_dataloader
@@ -5,7 +6,7 @@ from dataloader import get_training_dataloader
 
 LR = 0.001
 BATCH_SIZE = 64
-EPOCHS = 300
+EPOCHS = 50
 #EPOCHS = 4
 
 def get_bce_loss(predictions, y):
@@ -35,6 +36,12 @@ def save_trained(decoy_style, direction, seed):
     training_dl = get_training_dataloader(decoy_style, direction, seed, BATCH_SIZE)
 
     classifier = Classifier().to(device)
+    '''
+    from torchvision.models import resnet18 as resnet
+    from torchvision.models.squeezenet import SqueezeNet as resnet
+
+    classifier = resnet(num_classes=1).to(device)
+    '''
 
     curr_epoch = get_curr_epoch(decoy_style, direction, seed)
     if args["r"]:
@@ -45,8 +52,11 @@ def save_trained(decoy_style, direction, seed):
         classifier.load_state_dict(torch.load(fname, map_location="cpu"))
 
     optimizer = torch.optim.Adam(classifier.parameters(), lr=LR)
+    '''
     optimizer = torch.optim.SGD(classifier.parameters(),
                                 lr=LR, momentum=0.9, weight_decay=1e-6)
+    '''
+    print(sum(p.numel() for p in classifier.parameters()))
 
     start_from = curr_epoch + 1 if curr_epoch else 0
 
@@ -55,7 +65,7 @@ def save_trained(decoy_style, direction, seed):
             optimizer.zero_grad()
             graphs, y = (graphs.to(device), y.to(device))
 
-            predictions = classifier(graphs)
+            predictions = torch.flatten(classifier(graphs))
             bce = get_bce_loss(predictions, y)
             bce.backward()
 
