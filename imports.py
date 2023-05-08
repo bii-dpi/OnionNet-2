@@ -14,6 +14,7 @@ from sklearn.metrics import (roc_auc_score,
                              recall_score,
                              average_precision_score,
                              precision_recall_curve)
+from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 
 NUM_SEEDS = 1

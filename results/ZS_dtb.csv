@@ -1,0 +1,1 @@
+pdb_id,seed,epoch,AUC,AUPR,LogAUC,MCC,recall_1,recall_5,recall_10,recall_25,recall_50,EF_1,EF_5,EF_10,EF_25,EF_50

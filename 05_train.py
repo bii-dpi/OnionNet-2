@@ -45,8 +45,8 @@ def save_trained(decoy_style, direction, seed):
         classifier.load_state_dict(torch.load(fname, map_location="cpu"))
 
     optimizer = torch.optim.Adam(classifier.parameters(), lr=LR)
-    sgd = tf.keras.optimizers.SGD(lr=lr, momentum=0.9, decay=1e-6,
-clipvalue=0.01)
+    optimizer = torch.optim.SGD(classifier.parameters(),
+                                lr=LR, momentum=0.9, weight_decay=1e-6)
 
     start_from = curr_epoch + 1 if curr_epoch else 0
 

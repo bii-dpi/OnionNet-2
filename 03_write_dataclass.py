@@ -22,7 +22,7 @@ def get_dataclass_subset(decoy_style, pdb_id, examples):
     def get_example(example_pair):
 
         try:
-            return feat_dicts[example_pair[0]], example_pair[1]
+            return list(np.array(feat_dicts[example_pair[0]], dtype=float)), example_pair[1]
         except Exception as e:
             return None, example_pair[1]
 
