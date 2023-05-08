@@ -7,23 +7,10 @@ from progressbar import progressbar
 from concurrent.futures import ProcessPoolExecutor as PPE
 
 
-def get_id_dict(pdb_id):
-    ids = load_ids(pdb_id)
-    ligand_dict = get_ligand_dict(pdb_id)
-    casual_ids = [id_.split(":")[1] for id_ in ids.iloc[:, 1].tolist()]
-    ligands = [(ligand_dict[id_], int(id_.startswith("A")))
-               for id_ in ids.iloc[:, 0].tolist()]
-
-    return dict(zip(casual_ids, ligands))
-
-
 def get_lines(pdb_id, indiv, id_dict):
 
     smiles = id_dict[indiv.split("\n")[1]]
     is_active = float(indiv.split("\n")[1][0] == "A")
-
-# Modify pdb file of the ligand.
-# The residue name of the ligands is changed to "LIG".
 
     with open(f"tmp_{pdb_id}.mol2", "w") as f:
         f.write(indiv)
@@ -74,7 +61,6 @@ def save_proc_ligands(triplet):
         except Exception as e:
             failed += 1
             print(e)
-        break
     print(failed/len(split_mol2))
     with open(f"data/ligand_dicts/{mode}/{decoy_style}/{pdb_id}.pkl", "wb") as f:
         dump(ligand_dict, f)
