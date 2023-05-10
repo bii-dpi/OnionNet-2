@@ -14,6 +14,14 @@ for (direction in c("btd")) {
     results_summary <- rbind(results_summary, curr_summary) 
   }
 }
+hist(results$LogAUC)
+path <- glue("results/{decoy_style}_{direction}.csv")
+results <- read.csv(text = readLines(path, warn = F))
+curr_summary <- results %>%
+  group_by(epoch) %>%
+  summarize(LogAUC = mean(LogAUC)) %>%
+  mutate(direction = direction, decoy_style = decoy_style) %>%
+  select(direction, decoy_style, LogAUC)
 
 write.csv(results_summary, "../IntegratedShallow/results/external_val_gnn.csv",
           row.names = F)
